@@ -1,8 +1,8 @@
 # This is a an R script created using 'haplotypes' R-package. 'Haplotypes' provides functions for the analysis of haplotype data from DNA sequences and indels are coded separately following the simple indel coding method.
 # It requires installing an R-package: sna.
 
-f<-system.file("Superaln_manual.fa",package="haplotypes")
-x<-read.fas(file="Superaln_manual.fa") #reads an alignment file in a fasta format
+f<-system.file("CNV_aln.fa",package="haplotypes")
+x<-read.fas(file="CNV_aln.fa") #reads an alignment file in a fasta format
 d<- distance(x,indels="sic") #Computes an absolute pairwise character difference matrix from DNA sequences and gaps using simple indel coding method
 h<-haplotype(x,indels="s") #Infers haplotypes using 'Dna' object with coding gaps using simple indel coding method
 p<-parsimnet(x,prob=.95) #Conducts statistical parsimony analysis with %95 connection limit
