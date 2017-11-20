@@ -3,7 +3,7 @@
 # It requires loading of two other R-packages: ape and adegenet.
 
 input <- "Y_SNP_genotype_aln.fa" 
-d <- ape::read.dna(input, format='fasta') # reads the alignment file in a fasta format
+d <- ape::read.dna(input, format='fasta') # reads the alignment file in fasta format
 e <- dist.dna(d) #calculates the Hamming distances among haplotypes
 h <- pegas::haplotype(d) #generates haplotypes
 h <- sort(h, what = "label") #sorts the haplotypes by Y-haplogroup
