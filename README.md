@@ -1,1 +1,1 @@
-# Ampliconic_CNV
+# Project: Copy number variation of ampliconic genes across major Y chromosomal haplgroups
