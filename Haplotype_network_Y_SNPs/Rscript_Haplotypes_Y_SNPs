@@ -2,7 +2,7 @@
 # This is a an R script created using 'pegas' R-package. 'Pegas' provides functions for the analysis of haplotype data from DNA sequences.
 # It requires loading of two other R-packages: ape and adegenet.
 
-input <- "100_samples_hap_clustalo.fasta" 
+input <- "Y_SNP_genotype_aln.fa" 
 d <- ape::read.dna(input, format='fasta') # reads the alignment file in a fasta format
 e <- dist.dna(d) #calculates the Hamming distances among haplotypes
 h <- pegas::haplotype(d) #generates haplotypes
