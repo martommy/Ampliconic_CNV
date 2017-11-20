@@ -2,7 +2,7 @@
 # It requires installing an R-package: sna.
 
 f<-system.file("CNV_aln.fa",package="haplotypes")
-x<-read.fas(file="CNV_aln.fa") #reads an alignment file in a fasta format
+x<-read.fas(file="CNV_aln.fa") #reads an alignment file in fasta format
 d<- distance(x,indels="sic") #Computes an absolute pairwise character difference matrix from DNA sequences and gaps using simple indel coding method
 h<-haplotype(x,indels="s") #Infers haplotypes using 'Dna' object with coding gaps using simple indel coding method
 p<-parsimnet(x,prob=.95) #Conducts statistical parsimony analysis with %95 connection limit
