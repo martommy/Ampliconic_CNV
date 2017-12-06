@@ -275,9 +275,6 @@ plt.ld<-function(x,df){
 #plot!
 plt.ld(ld2,copy.number3)
 
-
-####haplotype analysis comes here######
-
 #round mean copy number to nearest integer
 
 copy.integer<-copy.number3
