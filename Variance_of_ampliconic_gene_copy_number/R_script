@@ -1,1 +1,9 @@
+library(ggplot2)
+library(reshape2)
+library(plyr)
 
+#read table with haplogroup information for each ID
+haplo<-read.table('haplogroup_info_11202017.txt',sep="\t",header=T)
+
+#merge copy number with haplogroup info in one dataframe
+dat3<-merge(dat2,haplo,by="IID",sort=F)
