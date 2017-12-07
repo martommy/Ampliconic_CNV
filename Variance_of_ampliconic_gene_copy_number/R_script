@@ -7,3 +7,13 @@ haplo<-read.table('haplogroup_info_11202017.txt',sep="\t",header=T)
 
 #merge copy number with haplogroup info in one dataframe
 dat3<-merge(dat2,haplo,by="IID",sort=F)
+
+
+#pivot table so that ids are rows and columns are genes. average copy number across replicates
+dat4<-dcast(dat3,IID~Gene,value.var="mean")
+dat4$IID<-as.character(dat4$IID)
+dat4<-join(dat4,haplo,by="IID")
+
+#plot mean and variance of ampliconic genes - Figure 1
+sum.dat4<-data.frame(Gene=colnames(dat4)[c(2:10)],Median=apply(dat4[,c(2:10)],2,median,na.rm=T),Variance=apply(dat4[,c(2:10)],2,var,na.rm=T))
+fig_1<-ggplot(sum.dat4,aes(log(Median),log(Variance),color=Gene))+geom_point()+stat_smooth(method="lm",se=F,color="grey")+theme_bw()+geom_text_repel(aes(log(Median),log(Variance),label=Gene))
