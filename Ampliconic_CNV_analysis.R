@@ -10,7 +10,7 @@ require(ggrepel)
 require(MASS)
 require(nlme)
 
-dat<-read.table('amp_data_11272017.txt',header=T,sep="\t")
+dat<-read.table('Table_S1A_ddPCR_outlier_analysis',header=T,sep="\t")
 
 #remove RPP30
 dat<-dat[-which(dat$Gene=="RPP30"),]
