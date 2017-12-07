@@ -17,3 +17,24 @@ dat4<-join(dat4,haplo,by="IID")
 #plot mean and variance of ampliconic genes - Figure 1
 sum.dat4<-data.frame(Gene=colnames(dat4)[c(2:10)],Median=apply(dat4[,c(2:10)],2,median,na.rm=T),Variance=apply(dat4[,c(2:10)],2,var,na.rm=T))
 fig_1<-ggplot(sum.dat4,aes(log(Median),log(Variance),color=Gene))+geom_point()+stat_smooth(method="lm",se=F,color="grey")+theme_bw()+geom_text_repel(aes(log(Median),log(Variance),label=Gene))
+
+
+#one-way Anova for every gene
+#BPY
+anova(lm(data=dat4,BPY~major_haplo))
+#CDY
+anova(lm(data=dat4,CDY~major_haplo))
+#DAZ
+anova(lm(data=dat4,DAZ~major_haplo))
+#HSFY
+anova(lm(data=dat4,HSFY~major_haplo))
+#PRY
+anova(lm(data=dat4,PRY~major_haplo))
+#RBMY
+anova(lm(data=dat4,RBMY~major_haplo))
+#TSPY
+anova(lm(data=dat4,TSPY~major_haplo))
+#VCY
+anova(lm(data=dat4,VCY~major_haplo))
+#XKRY
+anova(lm(data=dat4,XKRY~major_haplo))
