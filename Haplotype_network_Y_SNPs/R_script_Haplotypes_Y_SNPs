@@ -1,0 +1,16 @@
+
+# This is a an R script created using 'pegas' R-package. 'Pegas' provides functions for the analysis of haplotype data from DNA sequences.
+# It requires loading of two other R-packages: ape and adegenet.
+
+input <- "Y_SNP_genotype_aln.fa" 
+d <- ape::read.dna(input, format='fasta') # reads the alignment file in fasta format
+e <- dist.dna(d) # calculates the Hamming distances among haplotypes
+h <- pegas::haplotype(d) # generates haplotypes
+h <- sort(h, what = "label") # sorts the haplotypes by Y-haplogroup
+(net <- pegas::haploNet(h))
+ind.hap<-with(
+  stack(setNames(attr(h, "index"), rownames(h))),
+  table(hap=ind, pop=rownames(d)[values])
+) # creates a distribution of haplotypes per Y-haplogroup
+plot(net, size=attr(net, "freq"), scale.ratio=0.01, pie=ind.hap) # plots the haplotypes according to the haplotype frequencies
+legend(-10, 10, colnames(ind.hap), col=rainbow(ncol(ind.hap)), pch=19, ncol=1) # creates a legend
