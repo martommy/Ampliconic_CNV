@@ -113,4 +113,17 @@ write.table(tcopy.number3,'y.exprdat',row.names=T,col.names=F,quote=F,sep=" ")
 system('echo 9 | cat - y.exprdat > y_eve.exprdat')
 
 
+#3. write individual file - number of individuals per haplogroup in the SAME order as phylogenetic tree
+
+#order levels of major_haplogroup to match phylogeny
+copy.number3$major_haplo<-factor(copy.number3$major_haplo,levels=c("R","Q","L","T","O","J","I","G","C","E"))
+
+#write frequency of observations per haplogroup in dataframe to file
+write.table(t(table(copy.number3$major_haplo)),'y_eve.nindv',col.names=F,row.names=F,quote=F)
+
+##run EVE in terminal
+#assuming EVE binary and input data are in current directory 
+#Read README file for more detail
+#./EVEmodel -S -n 12 -t y_timetree_haplo_eve.nwk -i y_eve.nindiv -d y_eve.exprdat -f _trialRun -v 10
+
 
