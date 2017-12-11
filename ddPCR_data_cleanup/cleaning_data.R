@@ -9,10 +9,10 @@ require(ggrepel)
 require(MASS)
 require(nlme)
 
-dat<-read.table('Table_S1A_ddPCR_outlier_analysis',header=T,sep="\t")
+dat<-read.table('Table_S1A_ddPCR_outlier_analysis.txt',header=T,sep="\t")
 
 #remove RPP30
-dat<-dat[-which(dat$Gene=="RPP30"),]
+#dat<-dat[-which(dat$Gene=="RPP30"),]
 
 ###removing one replicate observation for each sample####
 
@@ -29,6 +29,7 @@ dat$median1<-apply(dat[,c(3:5)],1,median,na.rm=T)
 #plot cv for each gene before outlier removal - Figure S1A
 fig_s1a<-ggplot()+geom_boxplot(data=dat,aes(Gene,cv1),color="blue",outlier.shape=NA)+geom_point(data=dat,aes(Gene,cv1),position="jitter",alpha=0.7,color="blue")+theme_bw()+labs(x="Gene",y="Coefficient of Variation")+geom_hline(yintercept=median(dat$cv1,na.rm=T),color="red",linetype="dashed",size=1)+ylim(c(0,0.57))
 
+ggsave('Fig_S1A.pdf',fig_s1a,height=7,width=7)
 
 #determine which of the three replicates is the most distant from the other two. 
 dat$outlier<-NA
@@ -58,13 +59,10 @@ dat2$mean<-apply(dat2[,c('a','b','c')],1,mean,na.rm=T)
 dat2$sd<-apply(dat2[,c('a','b','c')],1,sd,na.rm=T)
 dat2$cv<-dat2$sd/dat2$mean
 
-
-
-#read table with haplogroup information for each ID
-haplo<-read.table('haplogroup_info_11202017.txt',sep="\t",header=T)
-
-#merge copy number with haplogroup info in one dataframe
-dat3<-merge(dat2,haplo,by="IID",sort=F)
-
 #plot coefficient of variation for each gene and red line with median cv across all genes after outlier removal - Figure S1B
 fig_s1b<-ggplot()+geom_boxplot(data=dat2,aes(Gene,cv),color="blue",outlier.shape=NA)+geom_point(data=dat2,aes(Gene,cv),position="jitter",alpha=0.7,color="blue")+theme_bw()+labs(x="Gene",y="Coefficient of Variation")+geom_hline(yintercept=median(dat2$cv,na.rm=T),color="red",linetype="dashed",size=1)
+
+ggsave('Fig_S1B.pdf',fig_s1b,height=7,width=7)
+
+#write cleaned data to file 
+write.table('ddpcr_outliers_removed.txt',sep="\t",col.names=T,row.names=F,quote=F)
