@@ -1,6 +1,5 @@
 #load REQUIRED packages
 require(outliers)
-#!
 require(plyr)
 require(reshape2)
 require(ggplot2)
