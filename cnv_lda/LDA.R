@@ -1,4 +1,4 @@
-
+require(MASS)
 #load cnv data
 dat4<-read.table("../Data_files/ddpcr_outliers_removed.txt",header=T,sep="\t")
 # run LDA with major haplogroup as category and gene counts as predictors
@@ -25,6 +25,6 @@ plt.ld<-function(x,df){
 }
 
 #plot!
-pld2<-plt.ld(ld2,copy.number3)
+pld2<-plt.ld(ld2,dat4)
 
 ggsave("../Figures/Fig_5.pdf",pld2,width=7,height=5)

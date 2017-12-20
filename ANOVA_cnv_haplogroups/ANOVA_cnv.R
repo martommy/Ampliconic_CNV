@@ -1,6 +1,7 @@
 require(ggplot2)
-library(reshape2)
-
+require(reshape2)
+require(ggrepel)
+require(plyr)
 
 #plotting median copy number per gene vs variance
 #read ampliconic gene numbers - cleaned
@@ -53,32 +54,48 @@ anova(lm(data=dat4,XKRY~major_haplo))
 
 ##Eve requires three files - phylogenetic file, trait data file, number of individuals within each haplogroup
 
-#load ytree
-ytree<-read.tree('../Data_files/ytree.nwk')
+#load rooted ytree
+ytree<-read.tree('../Data_files/y_timetree_haplo.nwk')
 
-#1. write phylogenetic file
-
-##root phylogenetic tree
-#C and E haplogroups are the oldest in our tree. get MRCA for any two descendants from them
-getMRCA(ytree,c(95,74)) # ydat are node labels in ydat
-# 173 is the parent node for these two lineages
-rooted.ytree<-reroot(ytree,node=173) # this is not very important
-
+#get haplogroup and clade info
+haplo<-read.table("../Data_files/haplogroup_info_11202017.txt",sep="\t",header=T)
+ydat<-fortify(ytree)
+ydat$IID<-ydat$label
+ydat<-join(ydat,haplo,by="IID")
 
 #collapse all branches within each clade
-col.ytree<-drop.tip(rooted.ytree,c(1:19,21:24,26:28,30:33,35:47,49:52,54:67,69:72,74:77,79:99))
-#relabel the tips with their haplogroup
-col.ytree$tip.label<-c("R","Q","L","T","O","J","I","G","C","E")
+#for each haplogroup, list the range of node numbers
+#write function for this
+desc.nodes<-function(x){
+  #where x is a string - major haplogroup
+  nodes.range<-ydat$node[grep(x,ydat$major_haplo)]
+  nodes.no.x<-seq(min(nodes.range),max(nodes.range)-1)
+  return(nodes.no.x)
+}
 
-#make tree ultrametric - i.e. calibrate tree based on timing of root = 261.5 kya
-mycalibration <- makeChronosCalib(col.ytree, node="root", age.max=261.5)
+col.ytree<-drop.tip(rooted.ytree,c(desc.nodes("C"),
+                                   desc.nodes("G"),
+                                   desc.nodes("E"),
+                                   desc.nodes("R"),
+                                   desc.nodes("Q"),
+                                   desc.nodes("L"),
+                                   desc.nodes("T"),
+                                   desc.nodes("O"),
+                                   desc.nodes("J"),
+                                   desc.nodes("I")
+))
+#relabel the tips with their haplogroup
+col.ytree$tip.label<-as.character(ydat$major_haplo[which(ydat$label%in%col.ytree$tip.label)])
+
+#make tree ultrametric - i.e. calibrate tree based on timing of root = 72.5 kya (timing of split between E and the rest of the haplogrups - Karmin 2015)
+mycalibration <- makeChronosCalib(col.ytree, node="root", age.max=72.5)
 cal.col.ytree <- chronos(col.ytree, lambda = 1, model = "relaxed", calibration = mycalibration, control = chronos.control() )
 
 #write.tree to file
-write.tree(cal.col.ytree,'y_timetree_haplo.nwk')
+write.tree(cal.col.ytree,'y_timetree_ultrametric_haplo.nwk')
 
 #add 10 as the first line - number of haplogroups -EVE requires this  
-system('echo 10 | cat - y_timetree_haplo.nwk > y_timetree_haplo_eve.nwk')
+system('echo 10 | cat - y_timetree_ultrametric_haplo.nwk > y_timetree_haplo_eve.nwk')
 
 
 #2. write trait/copy number data file
@@ -104,7 +121,7 @@ copy.number2[which(copy.number2$major_haplo=="O"),'order']<-5
 copy.number3<-copy.number2[order(copy.number2$order),]
 
 #transpose so genes are rows and individuals are columns
-tcopy.number3<-t(copy.number3[,-c(1,2,12)])
+tcopy.number3<-t(copy.number3[,-c(1,11,12)])
 
 #write to file
 write.table(tcopy.number3,'y.exprdat',row.names=T,col.names=F,quote=F,sep=" ")
