@@ -7,7 +7,7 @@ require(plyr)
 dat4<-read.table('../Data_files/ddpcr_outliers_removed.txt',header=T,sep="\t")
 
 #read y haplogrup tree
-ytree<-read.tree('../Data_files/Tree_segsites_IDs.nwk')
+ytree<-read.tree('../Data_files/y_unrooted_tree.nwk')
 
 #convert tree to dataframe for easier plotting and labeling
 ydat<-fortify(ytree)
@@ -54,7 +54,7 @@ ydat[,c('BPY','CDY','DAZ','HSFY','PRY','RBMY','TSPY','VCY','XKRY')]<-apply(ydat[
 ydat<-ydat[which(is.na(ydat$major_haplo)=="FALSE"),]
 
 #add copy number information - Figure 2
-#create setp and base to set placement and width of number columns
+#create setp and base to set placement and width of columns with numbers
 base<-max(ydat$x+0.01)
 step<-0.03
 fig_2<-p+geom_text(data=ydat,aes(x=base,label=CDY,y=y,color=major_haplo))+
@@ -80,8 +80,8 @@ fig_2<-p+geom_text(data=ydat,aes(x=base,label=CDY,y=y,color=major_haplo))+
 ggsave("../Figures/Fig_2.pdf",fig_2,height=15,width=15)
 
 
-#write rooted tree to file
-write.tree(rooted.ytree,'../Data_files//y_timetree_haplo.nwk')
+#write rooted tree to file for downstream analyses
+write.tree(rooted.ytree,'../Data_files/y_rooted_tree.nwk')
 
 
 
