@@ -8,7 +8,7 @@ require(plyr)
 dat4<-read.table('../Data_files/ddpcr_outliers_removed.txt',header=T,sep="\t")
 
 #plot mean and variance of ampliconic genes
-sum.dat4<-data.frame(Gene=colnames(dat4)[c(2:10)],Median=apply(dat4[,c(2:10)],2,median,na.rm=T),Variance=apply(dat4[,c(2:10)],2,var,na.rm=T))
+sum.dat4<-data.frame(Gene=colnames(dat4)[c(2:10)],Median=apply(dat4[,c(2:10)],2,median,na.rm=T),Variance=apply(dat4[,c(2:10)],2,var,na.rm=T),sd=apply(dat4[,c(2:10)],2,sd,na.rm=T),min=apply(dat4[,c(2:10)],2,function(x){return(range(x,na.rm=T)[1])}),max=apply(dat4[,c(2:10)],2,function(x){range(x,na.rm=T)[2]}))
 fig_1<-ggplot(sum.dat4,aes(log(Median),log(Variance),color=Gene))+geom_point()+stat_smooth(method="lm",se=F,color="grey")+theme_bw()+geom_text_repel(aes(log(Median),log(Variance),label=Gene))
 fig_1<-fig_1+theme(legend.position = "none")+labs(x="Log10(Median copy number)",y="Log10(Variance in copy number)")
 
@@ -55,11 +55,11 @@ anova(lm(data=dat4,XKRY~major_haplo))
 ##Eve requires three files - phylogenetic file, trait data file, number of individuals within each haplogroup
 
 #load rooted ytree
-ytree<-read.tree('../Data_files/y_timetree_haplo.nwk')
+rooted.ytree<-read.tree('../Data_files/y_rooted_tree.nwk')
 
 #get haplogroup and clade info
 haplo<-read.table("../Data_files/haplogroup_info_11202017.txt",sep="\t",header=T)
-ydat<-fortify(ytree)
+ydat<-fortify(rooted.ytree)
 ydat$IID<-ydat$label
 ydat<-join(ydat,haplo,by="IID")
 
@@ -91,8 +91,12 @@ col.ytree$tip.label<-as.character(ydat$major_haplo[which(ydat$label%in%col.ytree
 mycalibration <- makeChronosCalib(col.ytree, node="root", age.max=72.5)
 cal.col.ytree <- chronos(col.ytree, lambda = 1, model = "relaxed", calibration = mycalibration, control = chronos.control() )
 
+#replace tip labels with integers for EVE
+cal.col.ytree.int<-cal.col.ytree
+cal.col.ytree.int$tip.label<-as.character(seq(1,10,1))
+
 #write.tree to file
-write.tree(cal.col.ytree,'y_timetree_ultrametric_haplo.nwk')
+write.tree(cal.col.ytree.int,'y_timetree_ultrametric_haplo.nwk')
 
 #add 10 as the first line - number of haplogroups -EVE requires this  
 system('echo 10 | cat - y_timetree_ultrametric_haplo.nwk > y_timetree_haplo_eve.nwk')
@@ -107,18 +111,11 @@ copy.number<-dat4[,c(1:10,13)]
 copy.number2<-copy.number[which(is.na(copy.number$CDY)=="FALSE"),]
 
 #order rows by haplogroups in the order of the phylogenetic tree file
-copy.number2$order<-NA
-copy.number2[which(copy.number2$major_haplo=="T"),'order']<-4
-copy.number2[which(copy.number2$major_haplo=="L"),'order']<-3
-copy.number2[which(copy.number2$major_haplo=="Q"),'order']<-2
-copy.number2[which(copy.number2$major_haplo=="R"),'order']<-1
-copy.number2[which(copy.number2$major_haplo=="E"),'order']<-10
-copy.number2[which(copy.number2$major_haplo=="C"),'order']<-9
-copy.number2[which(copy.number2$major_haplo=="G"),'order']<-8
-copy.number2[which(copy.number2$major_haplo=="I"),'order']<-7
-copy.number2[which(copy.number2$major_haplo=="J"),'order']<-6
-copy.number2[which(copy.number2$major_haplo=="O"),'order']<-5
+tip.labs<-data.frame(major_haplo=cal.col.ytree$tip.label,order=seq(1,length(cal.col.ytree$tip.label)))
+copy.number2<-join(copy.number2,tip.labs,by="major_haplo")
+
 copy.number3<-copy.number2[order(copy.number2$order),]
+
 
 #transpose so genes are rows and individuals are columns
 tcopy.number3<-t(copy.number3[,-c(1,11,12)])
@@ -141,6 +138,6 @@ write.table(t(table(copy.number3$major_haplo)),'y_eve.nindv',col.names=F,row.nam
 ##run EVE in terminal
 #assuming EVE binary and input data are in current directory 
 #Read README file for more detail
-#./EVEmodel -S -n 12 -t y_timetree_haplo_eve.nwk -i y_eve.nindiv -d y_eve.exprdat -f _trialRun -v 10
+#./EVEmodel -S -n 12 -t y_timetree_haplo_eve.nwk -i y_eve.nindv -d y_eve.exprdat -f _trialRun -v 10
 
 
