@@ -2,7 +2,8 @@ require(ggplot2)
 require(reshape2)
 require(ggrepel)
 require(plyr)
-
+require(ape)
+require(ggtree)
 #plotting median copy number per gene vs variance
 #read ampliconic gene numbers - cleaned
 dat4<-read.table('../Data_files/ddpcr_outliers_removed.txt',header=T,sep="\t")
@@ -87,8 +88,8 @@ col.ytree<-drop.tip(rooted.ytree,c(desc.nodes("C"),
 #relabel the tips with their haplogroup
 col.ytree$tip.label<-as.character(ydat$major_haplo[which(ydat$label%in%col.ytree$tip.label)])
 
-#make tree ultrametric - i.e. calibrate tree based on timing of root = 72.5 kya (timing of split between E and the rest of the haplogrups - Karmin 2015)
-mycalibration <- makeChronosCalib(col.ytree, node="root", age.max=72.5)
+#make tree ultrametric - i.e. calibrate tree based on timing of root = 71.7 kya (timing of split between E and the rest of the haplogrups - Karmin 2015)
+mycalibration <- makeChronosCalib(col.ytree, node="root", age.max=71.7,age.min=71.7)
 cal.col.ytree <- chronos(col.ytree, lambda = 1, model = "relaxed", calibration = mycalibration, control = chronos.control() )
 
 #replace tip labels with integers for EVE
