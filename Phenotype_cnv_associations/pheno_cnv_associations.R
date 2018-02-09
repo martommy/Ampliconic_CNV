@@ -11,9 +11,12 @@ pheno<-read.table('../Data_files/phenotype_data.txt',header=T,sep="\t")
 #load rooted 
 ytree<-read.tree('../Data_files/y_rooted_tree.nwk')
 
-#make tree ultrametric - i.e. calibrate tree based on timing of root = 72.5 kya (timing of split between E and the rest of the haplogrups - Karmin 2015)
-mycalibration <- makeChronosCalib(ytree, node="root", age.max=72.5)
+#make tree ultrametric - i.e. calibrate tree based on timing of root = 71.7 kya (timing of split between E and the rest of the haplogrups - Karmin 2015)
+mycalibration <- makeChronosCalib(ytree, node="root", age.max=71.7,age.min=71.7)
 ytree <- chronos(ytree, lambda = 1, model = "relaxed", calibration = mycalibration, control = chronos.control() )
+
+#write ultrametric tree
+write.tree(ytree,'../Data_files/y_timetree_haplo.nwk')
 
 #load cnv data
 dat4<-read.table('../Data_files/ddpcr_outliers_removed.txt',header=T,sep="\t")

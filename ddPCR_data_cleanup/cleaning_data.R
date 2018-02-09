@@ -9,7 +9,7 @@ require(ggrepel)
 require(MASS)
 require(nlme)
 
-dat<-read.table('../Data_files/Table_S1A_ddPCR_outlier_analysis.txt',header=T,sep="\t")
+dat<-read.table('../Data_files/Updated_Table_S1A_before_outlier_removal',header=T,sep="\t")
 
 #remove RPP30
 #dat<-dat[-which(dat$Gene=="RPP30"),]
@@ -27,7 +27,7 @@ dat$cv1<-dat$sd1/dat$mean1
 dat$median1<-apply(dat[,c(3:8)],1,median,na.rm=T)
 
 #plot cv for each gene before outlier removal - Figure S1A
-fig_s1a<-ggplot()+geom_boxplot(data=dat,aes(Gene,cv1),color="blue",outlier.shape=NA)+geom_point(data=dat,aes(Gene,cv1),position="jitter",alpha=0.7,color="blue")+theme_bw()+labs(x="Gene",y="Coefficient of Variation")+geom_hline(yintercept=median(dat$cv1,na.rm=T),color="red",linetype="dashed",size=1)+ylim(c(0,0.57))
+fig_s1a<-ggplot()+geom_boxplot(data=dat,aes(Gene,cv1),color="blue",outlier.shape=NA)+geom_point(data=dat,aes(Gene,cv1),position="jitter",alpha=0.7,color="blue")+theme_bw()+labs(x="Gene",y="Coefficient of Variation")+geom_hline(yintercept=median(dat$cv1,na.rm=T),color="red",linetype="dashed",size=1)
 
 ggsave('../Figures/Fig_S1A.pdf',fig_s1a,height=7,width=7)
 
