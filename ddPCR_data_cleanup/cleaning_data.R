@@ -54,7 +54,7 @@ for(i in 1:nrow(dat2)){
 }
 
 #calculate mean, sd and coefficient of variation per gene per individual after outlier removal
-dat2$n<-apply(dat2[,c(3:5)],1,function(x){length(which(is.na(x)=="FALSE"))})
+dat2$n<-apply(dat2[,c(3:8)],1,function(x){length(which(is.na(x)=="FALSE"))})
 dat2$mean<-apply(dat2[,c('a','b','c','d','e','f')],1,mean,na.rm=T)
 dat2$sd<-apply(dat2[,c('a','b','c','d','e','f')],1,sd,na.rm=T)
 dat2$cv<-dat2$sd/dat2$mean
