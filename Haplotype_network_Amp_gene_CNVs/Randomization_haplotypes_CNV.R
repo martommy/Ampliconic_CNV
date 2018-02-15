@@ -60,9 +60,6 @@ dmrand.mat<-dmrand.mat[order(dmrand.mat$variable),]
 #write randomly rounded haplotypes to file
 write.table(dmrand.mat,'random_round_haplotypes.txt',sep="\t",col.names=T,row.names=F,quote=F)
 
-######haplotype networkanalysis comes here####
-
-
 ######calculating number of differences between pairs of haplotypes within and between haplogroups######
 
 #create vector of haplogroups
