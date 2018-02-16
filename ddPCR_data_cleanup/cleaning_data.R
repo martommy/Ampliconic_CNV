@@ -66,7 +66,7 @@ ggsave('../Figures/Fig_S1B.pdf',fig_s1b,height=7,width=7)
 
 #add haplogroup information to copy number data
 #read table with haplogroup information for each ID
-haplo<-read.table('../Data_files/haplogroup_info_11202017.txt',sep="\t",header=T)
+haplo<-read.table('../Data_files/haplogroup_info.txt',sep="\t",header=T)
 
 #merge copy number with haplogroup info in one dataframe
 dat3<-merge(dat2,haplo,by="IID",sort=F)
