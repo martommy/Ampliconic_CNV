@@ -100,7 +100,7 @@ cal.col.ytree.int$tip.label<-as.character(seq(1,10,1))
 write.tree(cal.col.ytree.int,'y_timetree_ultrametric_haplo.nwk')
 
 #add 10 as the first line - number of haplogroups -EVE requires this  
-system('echo 10 | cat - y_timetree_ultrametric_haplo.nwk > y_timetree_haplo_eve.nwk')
+system('echo 10 | cat - y_timetree_ultrametric_haplo.nwk > y_timetree_haplo_eveinput.nwk')
 
 
 #2. write trait/copy number data file
@@ -139,6 +139,6 @@ write.table(t(table(copy.number3$major_haplo)),'y_eve.nindv',col.names=F,row.nam
 ##run EVE in terminal
 #assuming EVE binary and input data are in current directory 
 #Read README file for more detail
-#./EVEmodel -S -n 12 -t y_timetree_haplo_eve.nwk -i y_eve.nindv -d y_eve.exprdat -f _trialRun -v 10
+#./EVEmodel -S -n 9 -t y_timetree_haplo_eveinput.nwk -i y_eve.nindv -d y_eve.exprdat -f _ampliconic -v 10
 
 

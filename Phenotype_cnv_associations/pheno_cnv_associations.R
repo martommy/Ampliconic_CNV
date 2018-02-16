@@ -15,8 +15,6 @@ ytree<-read.tree('../Data_files/y_rooted_tree.nwk')
 mycalibration <- makeChronosCalib(ytree, node="root", age.max=71.7,age.min=71.7)
 ytree <- chronos(ytree, lambda = 1, model = "relaxed", calibration = mycalibration, control = chronos.control() )
 
-#write ultrametric tree
-write.tree(ytree,'../Data_files/y_timetree_haplo.nwk')
 
 #load cnv data
 dat4<-read.table('../Data_files/ddpcr_outliers_removed.txt',header=T,sep="\t")
