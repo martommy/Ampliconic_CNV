@@ -97,10 +97,10 @@ cal.col.ytree.int<-cal.col.ytree
 cal.col.ytree.int$tip.label<-as.character(seq(1,10,1))
 
 #write.tree to file
-write.tree(cal.col.ytree.int,'y_timetree_ultrametric_haplo.nwk')
+write.tree(cal.col.ytree.int,'y_timetree_haplo.nwk')
 
 #add 10 as the first line - number of haplogroups -EVE requires this  
-system('echo 10 | cat - y_timetree_ultrametric_haplo.nwk > y_timetree_haplo_eveinput.nwk')
+system('echo 10 | cat - y_timetree_haplo.nwk > y_timetree_haplo_eveinput.nwk')
 
 
 #2. write trait/copy number data file
