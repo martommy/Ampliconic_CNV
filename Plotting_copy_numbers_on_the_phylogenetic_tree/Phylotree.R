@@ -2,6 +2,7 @@
 require(ggplot2)
 require(ggtree)
 require(plyr)
+require(ape)
 
 #read ampliconic gene numbers - cleaned
 dat4<-read.table('../Data_files/ddpcr_outliers_removed.txt',header=T,sep="\t")
@@ -44,18 +45,20 @@ ydat<-join(ydat,dat4,by="IID")
 groupInfo<-split(ydat$label,ydat$major_haplo)
 rooted.ytree<-groupOTU(rooted.ytree,groupInfo)
 
+#where should the tree edges lie
+tree.base<-max(ydat$x)
 p<-ggtree(rooted.ytree,aes(color=group))+
-  geom_segment(data=ydat[which(is.na(ydat$Haplogroup)=="FALSE"),],aes(x=x,xend=0.50,y=y,yend=y,color=major_haplo),linetype="dotted")
+  geom_segment(data=ydat[which(is.na(ydat$Haplogroup)=="FALSE"),],aes(x=x,xend=tree.base,y=y,yend=y,color=major_haplo),linetype="dotted")
 
 #add scale
 p<-p+geom_treescale(y=-2,offset=-2)
 
-ydat[,c('BPY','CDY','DAZ','HSFY','PRY','RBMY','TSPY','VCY','XKRY')]<-apply(ydat[,c('BPY','CDY','DAZ','HSFY','PRY','RBMY','TSPY','VCY','XKRY')],2,function(x){format(round(x,2),nsmall=2)})
+ydat[,c('BPY','CDY','DAZ','HSFY','PRY','RBMY','TSPY','VCY','XKRY')]<-apply(ydat[,c('BPY','CDY','DAZ','HSFY','PRY','RBMY','TSPY','VCY','XKRY')],2,function(x){format(round(as.numeric(x),2),nsmall=2)})
 ydat<-ydat[which(is.na(ydat$major_haplo)=="FALSE"),]
 
 #add copy number information - Figure 2
 #create setp and base to set placement and width of columns with numbers
-base<-max(ydat$x+0.01)
+base<-tree.base+0.03
 step<-0.03
 fig_2<-p+geom_text(data=ydat,aes(x=base,label=CDY,y=y,color=major_haplo))+
   geom_text(data=ydat,aes(x=base+step,label=BPY,y=y,color=major_haplo))+
