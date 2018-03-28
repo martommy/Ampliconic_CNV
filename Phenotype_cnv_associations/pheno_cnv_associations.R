@@ -82,8 +82,8 @@ height.pagel<-t(sapply(genes,gls.pagel.height))
 #PGLS for FMF - lambda also included in output
 fmf.pagel<-t(sapply(genes,gls.pagel.fmf))
 
-write.table(height.lm,'Height_simple_lmresults.txt',sep="\t",col.names=T,row.names=F,quote=F)
-write.table(fmf.lm,"FMF_simple_lmresults.txt",sep="\t",col.names=T,row.names=F,quote=F)
-write.table(height.pagel,'Height_PGLS_results.txt',sep="\t",col.names=T,row.names = F,quote=F)
-write.table(fmf.pagel,'FMF_PGLS_results.txt',sep="\t",col.names=T,row.names=F,quote=F)
+write.table(height.lm,'Height_simple_lmresults.txt',sep="\t",col.names=T,row.names=T,quote=F)
+write.table(fmf.lm,"FMF_simple_lmresults.txt",sep="\t",col.names=T,row.names=T,quote=F)
+write.table(height.pagel,'Height_PGLS_results.txt',sep="\t",col.names=T,row.names = T,quote=F)
+write.table(fmf.pagel,'FMF_PGLS_results.txt',sep="\t",col.names=T,row.names=T,quote=F)
 
